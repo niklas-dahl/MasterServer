@@ -1,0 +1,16 @@
+{
+  "name": "masterserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "express-subdomain": "^1.0.4",
+    "http-proxy": "^1.12.0"
+  }
+}

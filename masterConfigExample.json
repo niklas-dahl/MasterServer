@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Root Website",
+    "command": "nodejs ../server/server.js",
+    "port": 81
+  },
+  {
+    "subdomain": "www",
+    "redirect": "Root Website"
+  },
+  {
+    "name": "Api Server",
+    "subdomain": "api",
+    "command": "nodejs ../apiServer/server.js",
+    "port": 82
+  },
+  {
+    "name": "Niklas Website",
+    "subdomain": "niklas",
+    "command": "nodejs ../niklasServer/server.js",
+    "port": 83
+  },
+  {
+    "name": "Klavier",
+    "subdomain": "music.niklas",
+    "command": "nodejs ../pianoServer/server.js",
+    "port": 84
+  }
+]

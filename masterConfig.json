@@ -16,9 +16,5 @@
     "name": "Niklas Website",
     "subdomain": "niklas",
     "path": "./childServers/niklasServer"
-  },
-  {
-    "name": "DEFAULT",
-    "redirect": "Niklas Website"
   }
 ]

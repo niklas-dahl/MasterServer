@@ -4,7 +4,9 @@ var subdomain = require('express-subdomain');
 var serverConfig = require('./masterConfig.json');
 var app = express();
 
-var servers = [];
+const PORT = 80;
+var routes = [];
+
 for(var i = 0; i < serverConfig.length; i++) {
   var serverName = serverConfig[i].name;
   var serverPath = serverConfig[i].path;
@@ -15,26 +17,32 @@ for(var i = 0; i < serverConfig.length; i++) {
       // redirect route
       var found = false; 
       // search the redirect destination
-      for(var serverId = 0; serverId < servers.length; serverId++) {
-        if(servers[serverId].name === serverRedirect) {
+      for(var serverId = 0; serverId < routes.length; serverId++) {
+        if(routes[serverId].name === serverRedirect) {
           found = true;
-          var route = (serverName === "DEFAULT") ? "/" : "/"+serverSubdomain;
-          app.use(route, servers[serverId].router);  
+          var route = "/"+serverSubdomain;
+          app.use(route, routes[serverId].router); // change to subdomain
+
+          routes.push({
+            redirect: serverRedirect,
+            subdomain: serverSubdomain // remove duplicate code
+          });
           break;
         }
       }
       if(!found) throw new Error("redirect to " + serverRedirect + " does not exist (destination must come BEFORE redirect in config)");
   } else {
     // add server to main route
-    var router = require(serverPath)();
-    servers.push({
-      name: serverName,
-      router: router
-    }); // get this from config
-    
     // install route
     // app.use( subdomain(serverSubdomain, require(serverPath)() ) );
+    var router = require(serverPath)();
     app.use("/"+serverSubdomain, router);
+    
+    routes.push({
+      name: serverName,
+      router: router,
+      subdomain: serverSubdomain
+    }); // get this from config
   }
 
 }
@@ -44,6 +52,16 @@ app.use(function (req, res){
   res.send("The requested subdomain does not exist");
 });
 
-app.listen(5050, function () {
-  console.log("listening on port 5050")
+app.listen(PORT, function () {
+  console.log("Master Server started on port " + PORT);
+
+  console.log("Routes: " + routes.length)
+  for(var routeId = 0; routeId < routes.length; routeId++) {
+    var ser = routes[routeId];
+    if(ser.redirect) {
+      console.log((routeId+1)+"/"+routes.length+" "+ser.subdomain + " -> " + ser.redirect);
+    } else {
+      console.log((routeId+1)+"/"+routes.length+" "+ser.name + " @" + ser.subdomain);
+    }
+  }
 });

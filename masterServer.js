@@ -1,35 +1,45 @@
-var http = require('http'),
-    httpProxy = require('http-proxy');
 var express = require('express');
+var subdomain = require('express-subdomain');
+
+var serverConfig = require('./masterConfig.json');
 var app = express();
-//
-// Create a proxy server with custom application logic
-//
-var proxy = httpProxy.createProxyServer({});
 
-// add proxy x-forwarded-for header
-proxy.on('proxyReq', function(proxyReq, req, res, options) {
-  var remoteAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  proxyReq.setHeader('x-forwarded-for', remoteAddress);
-});
+var servers = [];
+for(var i = 0; i < serverConfig.length; i++) {
+  var serverName = serverConfig[i].name;
+  var serverPath = serverConfig[i].path;
+  var serverSubdomain = serverConfig[i].subdomain || ""; // change for subdomains
+  var serverRedirect = serverConfig[i].redirect;
 
-//
-// Create your custom server and just call `proxy.web()` to proxy
-// a web request to the target passed in the options
-// also you can use `proxy.ws()` to proxy a websockets request
-//
-app.use("/num1", function(req, res) {
-  // You can define here your custom logic to handle the request
-  // and then proxy the request.
-  proxy.web(req, res, { target: 'http://localhost:9999' });
-});
+  if(serverRedirect) {
+      // redirect route
+      var found = false; 
+      // search the redirect destination
+      for(var serverId = 0; serverId < servers.length; serverId++) {
+        if(servers[serverId].name === serverRedirect) {
+          found = true;
+          var route = (serverName === "DEFAULT") ? "/" : "/"+serverSubdomain;
+          app.use(route, servers[serverId].router);  
+          break;
+        }
+      }
+      if(!found) throw new Error("redirect to " + serverRedirect + " does not exist (destination must come BEFORE redirect in config)");
+  } else {
+    // add server to main route
+    var router = require(serverPath)();
+    servers.push({
+      name: serverName,
+      router: router
+    }); // get this from config
+    
+    // install route
+    // app.use( subdomain(serverSubdomain, require(serverPath)() ) );
+    app.use("/"+serverSubdomain, router);
+  }
 
-app.use("/num2", function(req, res) {
-  // You can define here your custom logic to handle the request
-  // and then proxy the request.
-  proxy.web(req, res, { target: 'http://localhost:8888' });
-});
+}
 
+// install default // this should not conflict with default in config
 app.use(function (req, res){
   res.send("The requested subdomain does not exist");
 });

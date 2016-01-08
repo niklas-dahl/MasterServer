@@ -4,16 +4,20 @@ var createRouter = function (name) {
   var router = express.Router();
 
   router.get('/', function (req, res) {
-    console.log("request @" + name)
-    res.send('Hello World! ' + name);
+    res.send("Haupt Website!");
+  });
+
+  router.get('/info', function (req, res) {
+    res.send("Haupt Website!\nInfo super geil");
   });
 
   return router;
 };
 module.exports = createRouter;
 
+// if localDevelopment then start own server
 var localDevelopment = false;
-if(localDevelopment) { // check for local development
+if(localDevelopment) {
   var app = express();
   app.use("/", createRouter());
 

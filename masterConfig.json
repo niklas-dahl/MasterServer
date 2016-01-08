@@ -1,7 +1,7 @@
 [
   {
     "name": "Root Website",
-    "path": "../server/server.js"
+    "path": "./childServers/rootServer"
   },
   {
     "subdomain": "www",
@@ -10,16 +10,15 @@
   {
     "name": "Api Server",
     "subdomain": "api",
-    "path": "nodejs ../apiServer/server.js"
+    "path": "./childServers/apiServer"
   },
   {
     "name": "Niklas Website",
     "subdomain": "niklas",
-    "path": "nodejs ../niklasServer/server.js"
+    "path": "./childServers/niklasServer"
   },
   {
-    "name": "Klavier",
-    "subdomain": "music.niklas",
-    "path": "nodejs ../pianoServer/server.js"
+    "name": "DEFAULT",
+    "redirect": "Niklas Website"
   }
 ]

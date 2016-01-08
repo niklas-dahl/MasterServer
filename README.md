@@ -2,7 +2,7 @@
 _Work in Progress!_
 
 ### One Server to rule them all
-A server to spawn and manage child servers for diffrent subdomains
+A server to spawn and manage child-servers for diffrent subdomains
 
 ### Prerequisites
 - Your child server must export his Router
@@ -14,7 +14,7 @@ A server to spawn and manage child servers for diffrent subdomains
 [
   {
     "name": "Root Website",
-    "path": "./childServers/rootServer"
+    "path": "./childServers/rootServer.js"
   },
   {
     "subdomain": "www",
@@ -23,12 +23,12 @@ A server to spawn and manage child servers for diffrent subdomains
   {
     "name": "Api Server",
     "subdomain": "api",
-    "path": "./childServers/apiServer"
+    "path": "./childServers/apiServer.js"
   },
   {
     "name": "Niklas Website",
     "subdomain": "niklas",
-    "path": "./childServers/niklasServer"
+    "path": "./childServers/niklasServer.js"
   },
   {
     "subdomain": "api.niklas",
@@ -36,3 +36,14 @@ A server to spawn and manage child servers for diffrent subdomains
   }
 ]
 ```
+#### name
+The name is there to identify the server and used for redirects
+
+#### subdomain
+The subdomain the server should get request from
+
+#### redirect
+The name of another server to redirect the request to (Destination server must come BEFORE redirect in config)
+
+#### path
+The path to your child-servers start file that exports the express Router

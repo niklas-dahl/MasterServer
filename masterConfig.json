@@ -1,7 +1,7 @@
 [
   {
     "name": "Root Website",
-    "path": "./childServers/rootServer"
+    "path": "./childServers/rootServer.js"
   },
   {
     "subdomain": "www",
@@ -10,11 +10,11 @@
   {
     "name": "Api Server",
     "subdomain": "api",
-    "path": "./childServers/apiServer"
+    "path": "./childServers/apiServer.js"
   },
   {
     "name": "Niklas Website",
     "subdomain": "niklas",
-    "path": "./childServers/niklasServer"
+    "path": "./childServers/niklasServer.js"
   }
 ]
